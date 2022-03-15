@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      #mainheading
+      {
+        font-size :60px;
+        font-family: calibri;
+        text-align :center;
+      }
+      #mainbody
+      {
+        background-image: url('https://www.esri.com/about/newsroom/wp-content/uploads/2020/03/JH_Dashboard_Map.jpg');
+        background-repeat: no-repeat;
+      }
+      #container
+      {
+        background-color: rgb(192,192,192,0.7);
+        border:1px solid rgb(192,192,192);
+        border-radius: 20px;
+        text-align: center;
+        margin-top:200px;
+        margin-bottom:200px;
+        margin-left: 400px;
+        margin-right: 400px;
+      }
+      .heading
+      {
+        text-align: left;
+      }
+      .box
+      {
+        text-align: left;
+      }
+      #but
+      {
+        text-align: right;
+      }
+      #tablec
+      {
+        text-align: center;
+      }
+      #print
+      {
+        font-size: 20px;
+        text-decoration: bold;
+      }
+      #power
+      {
+        text-align: center;
+        margin-left:200px;
+        margin-right:200px;
+      }      
+    </style>
+  </head>
+  <body id="mainbody" >
+    <div id="container">
+      <div id="mainheading">
+        COVID-19 DETAILS
+        <br/>
+      </div>
+      <div id="power">
+        <table id="tablec">
+          <tr id="r1">
+          <td class="heading">Enter the State</td>
+          <td class="box"><input id="State" type="text">
+          </input></td>
+          </tr>
+          <br/>
+          <tr id="r2">
+          <td class="heading">Enter the districts</td>
+          <td class="box"><input id="districts" type="text">
+          </input></td>
+          </tr>
+          <br/>
+          <tr id="r3">
+          <td id="but"><button onclick="runClick()">
+          show details
+          </button></td>
+          </tr>
+        </table>
+      </div>
+        <h4>STATISTICS</h4>
+        <hr>
+        <div id="print">
+          Total cases =
+          <div id="covidcases"></div>
+          <br>
+          Recovered cases=
+          <div id="recovered"></div>
+          <br>
+          No. of 1st dose vaccinations=
+          <div id="1stdose"></div>
+          <br>
+          No. of 2nd dose vaccinations=
+          <div id="2nddose"></div>
+        </div>
+    </div>
+  </body>
+  <script>
+      async function providedata(input1,input2)
+      {
+        let response =await fetch('https://data.covid19india.org/v4/min/data.min.json');
+        let data = await response.json();
+        let output1 = data[input1].districts[input2].total.confirmed;
+        let output2 = data[input1].districts[input2].total.recovered;
+        let output3 = data[input1].districts[input2].total.vaccinated1;
+        let output4 = data[input1].districts[input2].total.vaccinated2;
+        document.getElementById("covidcases").innerHTML = output1;
+        document.getElementById("recovered").innerHTML = output2;
+        document.getElementById("1stdose").innerHTML = output3;
+        document.getElementById("2nddose").innerHTML = output4;
+        let output=[output1,output2,output3,output4];
+
+        return JSON.stringify(output);
+      }
+      async function runClick()
+      {
+        let input1 = document.getElementById("State").value;
+        let input2 = document.getElementById("districts").value;
+        providedata(input1,input2);
+      }
+  </script>
+</html>
